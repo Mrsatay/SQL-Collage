@@ -1,5 +1,5 @@
 create database Bussines_Rule;
-use Bussines_Rule;
+use Bussines_Rule;-- 
 
 create table EMPLOYEE(
 	Fname text not null,
@@ -58,6 +58,69 @@ INSERT INTO DEPARTMENT(Dname,Dnumber,Mgr_ssn,Mgr_start_date)
 VALUES("Research",5,333445555,"1988-04-05"),
 	  ("Administration",5,987654321,"1995-01-01"),
       ("Headquarters",5,888665555,"1981-06-19");
+
+-- 1. Find all information about john smith 
+SELECT e.Fname, e.Lname, e.Ssn, e.Bdate, e.Address, e.Salary, d.Dname, p.Pname, p.Plocation
+FROM EMPLOYEE as e
+JOIN DEPARTMENT as d ON e.Dno = d.Dnumber
+JOIN PROJECT as p ON e.Dno = p.Dnumber
+WHERE e.Fname = 'John' AND e.Lname = 'Smith';
+
+-- 2. What department started on April 5, 1988
+select Dname,Mgr_start_date from DEPARTMENT as d
+where Mgr_start_date like '%05%';
+
+-- 3. Where does James Borg lives
+select Fname,Lname,Address from EMPLOYEE
+where Fname = 'James' and LName = 'Borg';
+
+UPDATE EMPLOYEE
+SET Lname = 'Borg'
+WHERE Fname = 'James' AND Lname = 'Borh';
+
+update employee
+set Ssn = 987654321
+where Fname = "Jennifer" and Lname = "Wallace";
+
+-- 4. Who are the sposes of the employees
+select e.Fname, e.Lname , d.Dependent_name, d.Relationship 
+from employee as e
+join dependent as d ON e.ssn = d.eSsn 
+where d.Relationship = 'Spouse' ;
+
+-- 5. What is the project located at SugarLand
+select * from project
+where Plocation = 'Sugarland';
+
+-- 6. Who is the manager of Research department?
+select d.Dname , d.Mgr_ssn , e.Fname , e.Lname from employee as e
+join department as d on e.Ssn = d.Mgr_ssn
+where Dname = 'Research';
+
+-- 7. who are the employees that work on project Newbenefits?
+select e.Fname , e.Lname , p.Pname from employee as e
+join PROJECT as p on e.Dno = p.Dnumber
+where Pname = 'Newbenefits';
+
+-- 8. Who are dependents of Franklin Wong?
+select e.Fname , e.Lname , d.Dependent_name , d.Relationship from employee as e
+join dependent as d on d.Essn = e.Ssn
+where Fname = 'Franklin' and Lname = 'Wong';
+
+-- 9. who are the dependents of employees who were assigned to project 
+--    Computerization
+
+select d.Dependent_name, d.Relationship , p.Pname , dt.Dname from dependent as d
+join department as dt on dt.Mgr_ssn = d.Essn
+join project as p on p.Dnumber = dt.Dnumber
+where p.Pname = 'Computerization';
+
+-- 10. in what department do employees belong, whose dependent are their sons?
+select dt.Dname from dependent as d
+join department as dt on d.Essn = dt.Mgr_ssn
+where d.Relationship = 'Son';
+
+
 
 
 
